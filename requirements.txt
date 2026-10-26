@@ -1,0 +1,16 @@
+# Core exchange connectivity
+ccxt>=4.2.25
+
+# Indicator math
+pandas>=2.0.3
+numpy>=1.24.4
+
+# Sentiment / HTTP
+requests>=2.31.0
+
+# Configuration
+PyYAML>=6.0.1
+python-dotenv>=1.0.1
+
+# Scheduling
+APScheduler>=3.10.4

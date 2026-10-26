@@ -1,0 +1,73 @@
+# ---------------------------------------------------------------------------------------
+# Tradable universe for the 30-day paper-trading experiment.
+#
+# Symbols are canonical CCXT spot symbols (BASE/QUOTE). When MARKET_TYPE=swap the engine
+# automatically rewrites them to Bybit linear-perp notation (BTC/USDT -> BTC/USDT:USDT).
+#
+# defaults  : applied to every entry unless the entry overrides the key
+# universe  : list of instruments; set `enabled: false` to park one without deleting it
+# ---------------------------------------------------------------------------------------
+
+defaults:
+  enabled: true
+  timeframe: 4h
+  weight: 1.0          # multiplier on the per-trade allocation (<= 1.0 recommended)
+  min_notional: 10.0   # USDT; orders below this are skipped rather than truncated
+
+universe:
+  - symbol: BTC/USDT
+    weight: 1.0
+    min_notional: 10.0
+    sentiment_currency: BTC
+
+  - symbol: ETH/USDT
+    weight: 1.0
+    min_notional: 10.0
+    sentiment_currency: ETH
+
+  - symbol: SOL/USDT
+    weight: 0.8
+    min_notional: 10.0
+    sentiment_currency: SOL
+
+  - symbol: XRP/USDT
+    weight: 0.5
+    min_notional: 10.0
+    sentiment_currency: XRP
+
+  - symbol: ADA/USDT        # Cardano
+    weight: 0.5
+    min_notional: 10.0
+    sentiment_currency: ADA
+
+  - symbol: ZEC/USDT        # Zcash
+    weight: 0.5
+    min_notional: 10.0
+    sentiment_currency: ZEC
+
+  - symbol: DGB/USDT        # DigiByte
+    weight: 0.5
+    min_notional: 10.0
+    sentiment_currency: DGB
+
+  - symbol: DYM/USDT        # Dymension
+    weight: 0.5
+    min_notional: 10.0
+    sentiment_currency: DYM
+
+  - symbol: TNSR/USDT       # Tensor
+    weight: 0.5
+    min_notional: 10.0
+    sentiment_currency: TNSR
+
+  - symbol: NAKA/USDT       # Nakamoto Games
+    weight: 0.5
+    min_notional: 10.0
+    sentiment_currency: NAKA
+
+  # Examples of parked instruments - flip `enabled` to true to include them.
+
+  - symbol: AVAX/USDT
+    enabled: false
+    weight: 0.5
+    sentiment_currency: AVAX
