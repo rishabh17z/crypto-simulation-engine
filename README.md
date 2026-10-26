@@ -1,13 +1,22 @@
 # crypto-simulation-engine
 
-A modular Python engine for a **30-day crypto paper-trading experiment** on Bybit
-Testnet via CCXT. It fetches OHLCV and sentiment every 4 hours, scores each instrument,
+A modular Python engine for a **30-day crypto paper-trading experiment** via CCXT
+(Bybit Testnet by default, or live public data from any CCXT exchange such as KuCoin).
+It fetches OHLCV and sentiment every 4 hours, scores each instrument,
 opens risk-bounded simulated positions with mandatory stop-loss / take-profit, charges
 realistic fees and slippage, logs everything to SQLite, and liquidates the book with a
 full P&L report the moment day 30 is reached.
 
 > Simulated results only. Fees and slippage are *modelled*; testnet liquidity does not
 > reflect production markets. Nothing here is investment advice.
+
+**Highlights**
+
+- 4-hourly cycle: RSI / EMA50 / EMA200 / ATR + Fear & Greed sentiment -> composite score
+- Long and short simulated positions, mandatory stop-loss / take-profit, fees + slippage
+- Capped book (max positions, exposure); entries ranked strongest-signal-first
+- Restart-safe: state lives in SQLite, a restart resumes the same 30-day window
+- Read-only web dashboard with equity curve, live positions and per-cycle decisions
 
 ---
 
@@ -29,14 +38,14 @@ crypto-simulation-engine/
 │   ├── storage/
 │   │   └── db_manager.py        # SQLite schema, WAL, concurrent-write handling
 │   └── orchestrator.py          # 4h scheduler, 30-day timer, liquidation + report
-├── tests/test_engine.py         # 28 offline regression tests (no network)
+├── tests/test_engine.py         # offline regression tests (no network)
+├── dashboard.py                 # read-only web dashboard (stdlib HTTP server)
 ├── requirements.txt
 └── main.py                      # CLI entry point
 ```
 
-`src/common.py` and `tests/` are additions to the requested tree: the retry/logging
-helpers are needed by three layers at once, and the tests cover the paths a live run
-cannot trigger on demand (stop-outs, shorts, restart recovery).
+The tests cover the paths a live run cannot trigger on demand (stop-outs, shorts,
+restart recovery).
 
 ---
 
@@ -45,7 +54,7 @@ cannot trigger on demand (stop-outs, shorts, restart recovery).
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env        # then paste your Bybit TESTNET keys
+cp .env.example .env        # optional: Bybit TESTNET keys, or EXCHANGE_ID=kucoin USE_SANDBOX=false
 python main.py doctor       # verify config, exchange, indicators, sentiment, DB
 python main.py once         # run a single cycle end to end
 python main.py run          # start the 30-day experiment
