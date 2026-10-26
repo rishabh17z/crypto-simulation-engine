@@ -73,6 +73,17 @@ SQLite, so stopping and restarting resumes mid-experiment — and **does not ext
 
 ---
 
+## Dashboard
+
+```bash
+python dashboard.py            # http://127.0.0.1:8050, refreshes every 60s
+```
+
+A read-only web view of the running experiment: equity curve, P&L, cycle count and
+time remaining, open positions marked with live public tickers, the latest cycle's
+decisions (including skipped signals) and closed trades. It opens SQLite with
+`mode=ro`, so it can run alongside the engine without writing to or locking the DB.
+
 ## How a cycle works
 
 1. **Market data** — OHLCV per asset; the in-progress candle is discarded so indicators
